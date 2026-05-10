@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Lab 3 — Захист ПЗ (Trialware + Цезар)</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div id="app" class="app">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand__title">Lab 3</div>
+          <div class="brand__subtitle">Методи захисту ПЗ · Trialware (10 запусків) · Шифр Цезаря</div>
+        </div>
+        <div class="topbar__right">
+          <a class="btn btn--ghost" href="./recaptcha.html">reCAPTCHA (Lab 4)</a>
+          <button id="btnHelp" class="btn btn--ghost" type="button">Довідка</button>
+          <button id="btnAbout" class="btn btn--ghost" type="button">Про програму</button>
+        </div>
+      </header>
+
+      <main class="main">
+        <section id="blockedCard" class="card hidden" aria-live="polite">
+          <h2 class="card__title">Пробний період завершено</h2>
+          <p class="muted">
+            За умовами <b>Trialware</b> ця програма блокується після <b>10 запусків</b> з моменту “встановлення” (першого запуску в цьому браузері).
+          </p>
+          <div class="grid2">
+            <div class="kv">
+              <div class="kv__k">Встановлено</div>
+              <div id="installedAt" class="kv__v">—</div>
+            </div>
+            <div class="kv">
+              <div class="kv__k">К-сть запусків</div>
+              <div id="launchCount" class="kv__v">—</div>
+            </div>
+          </div>
+          <div class="row">
+            <button id="btnActivateFromBlocked" class="btn" type="button">Активувати ключем</button>
+            <button id="btnShowLicenseInfo" class="btn btn--ghost" type="button">Показати умови</button>
+          </div>
+        </section>
+
+        <section id="workspaceCard" class="card">
+          <div class="toolbar">
+            <div class="toolbar__group">
+              <label class="btn btn--ghost btn--file">
+                Відкрити файл
+                <input id="fileInput" type="file" accept=".txt,.md,.json,.csv,.log,text/plain,application/json,text/csv" />
+              </label>
+              <button id="btnSave" class="btn" type="button">Зберегти</button>
+              <button id="btnSaveAs" class="btn btn--ghost" type="button">Зберегти як…</button>
+              <button id="btnPrint" class="btn btn--ghost" type="button">Друк</button>
+            </div>
+
+            <div class="toolbar__group">
+              <button id="btnFileProps" class="btn btn--ghost" type="button">Параметри файлу</button>
+              <button id="btnExportJson" class="btn btn--ghost" type="button">Експорт JSON</button>
+              <button id="btnClear" class="btn btn--danger btn--ghost" type="button">Очистити</button>
+            </div>
+
+            <div class="toolbar__group toolbar__group--right">
+              <button id="btnSettings" class="btn btn--ghost" type="button">Налаштування</button>
+              <button id="btnActivate" class="btn btn--primary" type="button">Активація</button>
+            </div>
+          </div>
+
+          <div class="split">
+            <div class="pane">
+              <div class="pane__header">
+                <div class="pane__title">Редактор</div>
+                <div class="pane__meta">
+                  <span id="fileNameBadge" class="badge">Немає файлу</span>
+                  <span id="statusBadge" class="badge badge--muted">Trialware</span>
+                </div>
+              </div>
+              <textarea id="editor" class="editor" placeholder="Відкрийте файл або введіть текст…"></textarea>
+              <div class="pane__footer">
+                <div class="muted" id="editorStats">0 символів · 0 рядків</div>
+                <div class="muted" id="trialStats">—</div>
+              </div>
+            </div>
+
+            <div class="pane">
+              <div class="pane__header">
+                <div class="pane__title">Пошук / Заміна</div>
+              </div>
+              <div class="form">
+                <label class="field">
+                  <div class="field__label">Пошук</div>
+                  <input id="searchQuery" class="input" type="text" placeholder="рядок для пошуку" />
+                </label>
+                <div class="row">
+                  <button id="btnFindNext" class="btn btn--ghost" type="button">Знайти наступне</button>
+                  <button id="btnFindAll" class="btn btn--ghost" type="button">Знайти всі</button>
+                </div>
+
+                <label class="field">
+                  <div class="field__label">Заміна на</div>
+                  <input id="replaceQuery" class="input" type="text" placeholder="рядок для заміни" />
+                </label>
+                <div class="row">
+                  <button id="btnReplaceNext" class="btn btn--ghost" type="button">Замінити наступне</button>
+                  <button id="btnReplaceAll" class="btn btn--ghost" type="button">Замінити всі</button>
+                </div>
+
+                <div class="divider"></div>
+                <div class="muted" id="searchResult">—</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <div class="footer__left">
+          <span class="muted">“Встановлення” = перший запуск у цьому браузері.</span>
+        </div>
+        <div class="footer__right">
+          <button id="btnResetDemo" class="linklike" type="button" title="Для викладача/демо: скинути пробний режим у цьому браузері">
+            Скинути (демо)
+          </button>
+        </div>
+      </footer>
+    </div>
+
+    <dialog id="modal" class="modal">
+      <form method="dialog" class="modal__card">
+        <div class="modal__header">
+          <div id="modalTitle" class="modal__title">—</div>
+          <button class="btn btn--ghost" value="close" type="submit">Закрити</button>
+        </div>
+        <div id="modalBody" class="modal__body"></div>
+        <div id="modalActions" class="modal__actions"></div>
+      </form>
+    </dialog>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="uk">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Lab 4 — Google reCAPTCHA</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <!--
+      ВАЖЛИВО:
+      Щоб Google reCAPTCHA реально працювала, потрібні:
+      - реєстрація сайту в Google reCAPTCHA
+      - ваш site key (вставити в data-sitekey нижче)
+      - інтернет-доступ
+    -->
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</head>
+
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand__title">Lab 4</div>
+        <div class="brand__subtitle">Окрема форма з Google reCAPTCHA</div>
+      </div>
+      <div class="topbar__right">
+        <a class="btn btn--ghost" href="./index.html">Назад</a>
+      </div>
+    </header>
+
+    <main class="main">
+      <section class="card">
+        <h2 class="card__title">Форма з Google reCAPTCHA</h2>
+
+        <form id="rcForm" class="form" action="#" method="post" onsubmit="return false;">
+          <label class="field">
+            <div class="field__label">Повідомлення (приклад)</div>
+            <input id="rcMessage" class="input" type="text" placeholder="Введіть текст…" />
+          </label>
+
+          <div class="g-recaptcha" data-sitekey="6LcvuKssAAAAADHtd34KkzreHQhaMr0XLhlHqUix"></div>
+
+          <div class="row">
+            <button id="rcSubmit" class="btn btn--primary" type="button">Надіслати</button>
+            <span id="rcStatus" class="muted">—</span>
+          </div>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      const $ = (id) => document.getElementById(id);
+      const status = $("rcStatus");
+      const submit = $("rcSubmit");
+      status.textContent = "Пройдіть reCAPTCHA і натисніть «Надіслати».";
+
+      submit.addEventListener("click", () => {
+        const token =
+          window.grecaptcha && window.grecaptcha.getResponse ? window.grecaptcha.getResponse() : "";
+        if (!token) {
+          status.textContent = "Пройдіть reCAPTCHA перед відправкою.";
+          return;
+        }
+        status.textContent = "reCAPTCHA пройдена. Форму надіслано!";
+      });
+    })();
+  </script>
+</body>
+
+</html>
